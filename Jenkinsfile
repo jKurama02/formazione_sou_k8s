@@ -1,21 +1,24 @@
-Jenkinsfile(flask-app-example-build)
+
 pipeline {
     agent any
-
-     stages {
-             stage('Build') { 
-                steps { 
-                echo "––Build stage ..." 
+    
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKER_IMAGE_NAME = 'anmedyns/my_app'
+        DOCKER_IMAGE_TAG = 'latest-idk'
+    }
+    
+    stages {
+        stage('Git clone') {
+            steps {
+                echo 'Cloning repository GitHub'
+                git branch: 'main', url: 'https://github.com/tuousername/formazione_sou_k8s.git'
             }
         }
-        stage('Test'){
+        
+        stage('Build Docker Image') {
             steps {
-                echo "–––Test stage ..." 
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo "–––Deploy stage ..."
+                    docker.build("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}")
             }
         }
     }
