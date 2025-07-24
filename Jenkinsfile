@@ -6,7 +6,6 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
         DOCKER_IMAGE_NAME = 'anmedyns/my_app'
-        DOCKER_IMAGE_TAG = 'idk'
     }
     
     stages {
@@ -20,13 +19,13 @@ pipeline {
                 script {
                     // Determina il tag Docker in base al Git ref
                     if (env.GIT_BRANCH == 'origin/master') {
-                        DOCKER_IMAGE_TAG = 'latest'
+                        dockerTag = 'latest'
                     } else if (env.GIT_BRANCH.startsWith('origin/tags/')) {
-                        DOCKER_IMAGE_TAG = env.GIT_BRANCH.replace('origin/tags/', '')
+                        dockerTag = env.GIT_BRANCH.replace('origin/tags/', '')
                     } else if (env.GIT_BRANCH == 'origin/develop') {
-                        DOCKER_IMAGE_TAG = "develop-${env.GIT_COMMIT.substring(0, 7)}"
+                        dockerTag = "develop-${env.GIT_COMMIT.substring(0, 7)}"
                     } else {
-                        DOCKER_IMAGE_TAG = 'custom'
+                        dockerTag = 'custom'
                     }
                 }
             }
@@ -34,7 +33,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}")
+                    docker.build("${DOCKER_IMAGE_NAME}:${dockerTag}")
                 }
             }
         }
@@ -43,7 +42,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
-                        docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}").push()
+                        docker.image("${DOCKER_IMAGE_NAME}:${dockerTag}").push()
                     }
                 }
             }
