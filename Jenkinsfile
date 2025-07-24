@@ -6,6 +6,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
         DOCKER_IMAGE_NAME = 'anmedyns/my_app'
+        dockerTag = 'idk'
     }
     
     stages {
@@ -17,7 +18,6 @@ pipeline {
         stage('Tag image') {
             steps {
                 script {
-                    def dockerTag = 'idk'
                     // Determina il tag Docker in base al Git ref
                     if (env.GIT_BRANCH == 'origin/master') {
                         dockerTag = 'latest'
