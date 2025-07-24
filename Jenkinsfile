@@ -6,7 +6,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
         DOCKER_IMAGE_NAME = 'anmedyns/my_app'
-        DOCKER_TAG = 'custom'  // Valore di default
+        dockerTag = 'idk'
     }
     
     stages {
@@ -15,29 +15,26 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/jKurama02/formazione_sou_k8s.git'
             }
         }
-        
         stage('Tag image') {
             steps {
                 script {
-                    // Debug: stampa il branch per verificare
-                    echo "GIT_BRANCH: ${env.GIT_BRANCH}"
-                    
+                    // Determina il tag Docker in base al Git ref
                     if (env.GIT_BRANCH == 'origin/master') {
-                        env.DOCKER_TAG = 'latest'
-                    } else if (env.GIT_BRANCH?.startsWith('origin/tags/')) {
-                        env.DOCKER_TAG = env.GIT_BRANCH.replace('origin/tags/', '')
+                        env.dockerTag = 'latest'
+                    } else if (env.GIT_BRANCH.startsWith('origin/tags/')) {
+                        env.dockerTag = env.GIT_BRANCH.replace('origin/tags/', '')
                     } else if (env.GIT_BRANCH == 'origin/develop') {
-                        env.DOCKER_TAG = "develop-${env.GIT_COMMIT.substring(0, 7)}"
+                        env.dockerTag = "develop-${env.GIT_COMMIT.substring(0, 7)}"
+                    } else {
+                        env.dockerTag = 'custom'
                     }
-                    // Se nessuna condizione è soddisfatta, rimane 'custom'
                 }
             }
         }
-        
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE_NAME}:${env.DOCKER_TAG}")
+                    docker.build("${DOCKER_IMAGE_NAME}:${env.dockerTag}")
                 }
             }
         }
@@ -46,7 +43,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
-                        docker.image("${DOCKER_IMAGE_NAME}:${env.DOCKER_TAG}").push()
+                        docker.image("${DOCKER_IMAGE_NAME}:${env.dockerTag}").push()
                     }
                 }
             }
