@@ -18,7 +18,7 @@ pipeline {
         stage('Tag image') {
             steps {
                 script {
-                    // Determina il tag Docker in base al Git ref
+                    echo "GIT_BRANCH: ${env.GIT_BRANCH}"
                     if (env.GIT_BRANCH == 'origin/master') {
                         env.dockerTag = 'latest'
                     } else if (env.GIT_BRANCH.startsWith('origin/tags/')) {
