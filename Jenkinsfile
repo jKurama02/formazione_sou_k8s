@@ -19,7 +19,7 @@ pipeline {
                 script {
                     // Determina il tag Docker in base al Git ref
                     if (env.GIT_BRANCH == 'origin/master') {
-                        dockerTag = 'latest'
+                        def dockerTag = 'latest'
                     } else if (env.GIT_BRANCH.startsWith('origin/tags/')) {
                         dockerTag = env.GIT_BRANCH.replace('origin/tags/', '')
                     } else if (env.GIT_BRANCH == 'origin/develop') {
