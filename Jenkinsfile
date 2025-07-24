@@ -25,9 +25,7 @@ pipeline {
                         env.dockerTag = env.GIT_BRANCH.replace('origin/tags/', '')
                     } else if (env.GIT_BRANCH == 'origin/develop') {
                         env.dockerTag = "develop-${env.GIT_COMMIT.substring(0, 7)}"
-                    } else {
-                        env.dockerTag = 'custom'
-                    }
+                    } 
                 }
             }
         }
