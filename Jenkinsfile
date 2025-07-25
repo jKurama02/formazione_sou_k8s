@@ -11,7 +11,10 @@ pipeline {
     stages {
         stage('Cloning repository GitHub') {
             steps {
-                git branch: 'main', url: 'https://github.com/jKurama02/formazione_sou_k8s.git'
+                git(
+                    url: 'https://github.com/jKurama02/formazione_sou_k8s.git',
+                    tag: 'v1.0' // Sostituisci con il tuo tag specifico
+                )
             }
         }
 
