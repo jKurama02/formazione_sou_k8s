@@ -22,8 +22,8 @@ pipeline {
                     echo "GIT_BRANCH: ${env.GIT_BRANCH} ––––––––––––––––––––––––––––––––––––––"
                     env.latestTag = sh(script: 'git describe --tags --abbrev=0 || echo "no-tags"', returnStdout: true).trim()
                     echo "env.latestTag = ${env.latestTag}"
-                    if (env.GIT_BRANCH.startsWith('origin/main/tags/')) {
-                        env.dockerTag = env.GIT_BRANCH.replace('origin/main/tags', '')
+                    if (env.latestTag) {
+                        env.dockerTag = env.latestTag
                     } else if (env.GIT_BRANCH == 'origin/main') {env.dockerTag = 'latest'
                         env.dockerTag = 'latest'
                     } else if (env.GIT_BRANCH == 'origin/develop') {
