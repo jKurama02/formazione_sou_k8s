@@ -6,7 +6,6 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
         DOCKER_IMAGE_NAME = 'anmedyns/my_app'
-        dockerTag = 'idk'
     }
     
     stages {
@@ -15,25 +14,29 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/jKurama02/formazione_sou_k8s.git'
             }
         }
+
         stage('Tag image') {
             steps {
                 script {
+                    env.dockerTag = 'idk'  // Usa env. per renderla globale
                     echo "GIT_BRANCH: ${env.GIT_BRANCH} ––––––––––––––––––––––––––––––––––––––"
+                    
                     if (env.GIT_BRANCH == 'origin/master') {
                         env.dockerTag = 'latest'
                     } else if (env.GIT_BRANCH.startsWith('origin/tags/')) {
                         env.dockerTag = env.GIT_BRANCH.replace('origin/tags/', '')
                     } else if (env.GIT_BRANCH == 'origin/develop') {
                         env.dockerTag = "develop-${env.GIT_COMMIT.substring(0, 7)}"
-                        echo "dockerTag: ${env.dockerTag} –––––––––––––––––––––––––––––––––––––"
-                    } 
+                    }
+                    echo "FINAL DOCKER TAG: ${env.dockerTag}"
                 }
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE_NAME}:${env.dockerTag}")
+                    docker.build("${env.DOCKER_IMAGE_NAME}:${env.dockerTag}", ".")  // Aggiunto il percorso "."
                 }
             }
         }
@@ -42,7 +45,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
-                        docker.image("${DOCKER_IMAGE_NAME}:${env.dockerTag}").push()
+                        docker.image("${env.DOCKER_IMAGE_NAME}:${env.dockerTag}").push()
                     }
                 }
             }
