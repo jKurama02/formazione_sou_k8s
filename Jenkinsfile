@@ -22,18 +22,17 @@ pipeline {
                     echo "GIT_BRANCH: ${env.GIT_BRANCH} ––––––––––––––––––––––––––––––––––––––"
                     env.latestTag = sh(script: 'git describe --tags --abbrev=0 || echo "no-tags"', returnStdout: true).trim()
                     echo "env.latestTag = ${env.latestTag}"
-                    if (env.latestTag) {
-                        env.dockerTag = env.latestTag
-                    } else if (env.GIT_BRANCH == 'origin/main') {env.dockerTag = 'latest'
-                        env.dockerTag = 'latest'
-                    } else if (env.GIT_BRANCH == 'origin/develop') {
+                    if (env.GIT_BRANCH == 'origin/develop') {
                         env.dockerTag = "develop-${env.GIT_COMMIT.substring(0, 7)}"
+                    } else if (env.latestTag != "no-tags") {
+                        env.dockerTag = env.latestTag
+                    } else if (env.GIT_BRANCH == 'origin/main') {
+                        env.dockerTag = 'latest'
                     }
                     echo "FINAL DOCKER TAG: ${env.dockerTag}"
                 }
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 script {
