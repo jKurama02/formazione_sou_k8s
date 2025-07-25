@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Cloning repository GitHub') {
             steps {
-                git branch: 'develop', url: 'https://github.com/jKurama02/formazione_sou_k8s.git'
+                git branch: 'main', url: 'https://github.com/jKurama02/formazione_sou_k8s.git'
             }
         }
 
@@ -21,10 +21,10 @@ pipeline {
                     env.dockerTag = 'idk'  //like this you can overwrite the env.vaeriable
                     echo "GIT_BRANCH: ${env.GIT_BRANCH} ––––––––––––––––––––––––––––––––––––––"
                     
-                    if (env.GIT_BRANCH == 'origin/main') {
-                        env.dockerTag = 'latest'
-                    } else if (env.GIT_BRANCH.startsWith('origin/main/tags/')) {
+                    if (env.GIT_BRANCH.startsWith('origin/main/tags/')) {
                         env.dockerTag = env.GIT_BRANCH.replace('origin/main/tags', '')
+                    } else if (env.GIT_BRANCH == 'origin/main') {env.dockerTag = 'latest'
+                        env.dockerTag = 'latest'
                     } else if (env.GIT_BRANCH == 'origin/develop') {
                         env.dockerTag = "develop-${env.GIT_COMMIT.substring(0, 7)}"
                     }
