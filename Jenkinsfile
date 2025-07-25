@@ -18,7 +18,7 @@ pipeline {
         stage('Tag image') {
             steps {
                 script {
-                    env.dockerTag = 'idk'  // Usa env. per renderla globale
+                    env.dockerTag = 'idk'  //like this you can overwrite the env.vaeriable
                     echo "GIT_BRANCH: ${env.GIT_BRANCH} ––––––––––––––––––––––––––––––––––––––"
                     
                     if (env.GIT_BRANCH == 'origin/master') {
@@ -36,7 +36,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${env.DOCKER_IMAGE_NAME}:${env.dockerTag}", ".")  // Aggiunto il percorso "."
+                    docker.build("${env.DOCKER_IMAGE_NAME}:${env.dockerTag}", ".")  // "." current directory
                 }
             }
         }
