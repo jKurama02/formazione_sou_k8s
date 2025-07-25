@@ -20,7 +20,7 @@ pipeline {
                 script {
                     env.dockerTag = 'idk'  //like this you can overwrite the env.vaeriable
                     echo "GIT_BRANCH: ${env.GIT_BRANCH} ––––––––––––––––––––––––––––––––––––––"
-                    def env.latestTag = sh(script: 'git describe --tags --abbrev=0 || echo "no-tags"', returnStdout: true).trim()
+                    env.latestTag = sh(script: 'git describe --tags --abbrev=0 || echo "no-tags"', returnStdout: true).trim()
                     echo "env.latestTag = ${env.latestTag}"
                     if (env.GIT_BRANCH.startsWith('origin/main/tags/')) {
                         env.dockerTag = env.GIT_BRANCH.replace('origin/main/tags', '')
