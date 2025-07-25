@@ -24,7 +24,7 @@ pipeline {
                     echo "env.latestTag = ${env.latestTag}"
                     if (env.GIT_BRANCH == 'origin/develop') {
                         env.dockerTag = "develop-${env.GIT_COMMIT.substring(0, 7)}"
-                    } else if (env.latestTag) {
+                    } else if (env.latestTag != "no-tags") {
                         env.dockerTag = env.latestTag
                     } else if (env.GIT_BRANCH == 'origin/main') {
                         env.dockerTag = 'latest'
