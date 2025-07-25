@@ -18,13 +18,14 @@ pipeline {
         stage('Tag image') {
             steps {
                 script {
-                    echo "GIT_BRANCH: ${env.GIT_BRANCH}"
+                    echo "GIT_BRANCH: ${env.GIT_BRANCH} ––––––––––––––––––––––––––––––––––––––"
                     if (env.GIT_BRANCH == 'origin/master') {
                         env.dockerTag = 'latest'
                     } else if (env.GIT_BRANCH.startsWith('origin/tags/')) {
                         env.dockerTag = env.GIT_BRANCH.replace('origin/tags/', '')
                     } else if (env.GIT_BRANCH == 'origin/develop') {
                         env.dockerTag = "develop-${env.GIT_COMMIT.substring(0, 7)}"
+                        echo "dockerTag: ${env.dockerTag} –––––––––––––––––––––––––––––––––––––"
                     } 
                 }
             }
