@@ -6,7 +6,7 @@ pipeline {
         stage('Esegui Helm Install') {
             steps {
                 sh '''
-			helm upgrade --install flask-app /home/jenkins/workspace/formazione_sou_k8s/charts/flask-app-chart --namespace formazione-sou
+			helm upgrade --install flask-app /home/jenkins/workspace/helm/charts/flask-app-chart --namespace formazione-sou
                 '''
             }
         }
