@@ -1,0 +1,16 @@
+pipeline {
+    agent {
+        label 'jenkins-agent_1'
+    }
+    stages {
+        stage('Esegui Helm Install') {
+            steps {
+                sh '''
+                    git clone https://github.com/jKurama02/formazione_sou_k8s.git
+                    cd formazione_sou_k8s/charts/flask-app-chart
+		            helm upgrade --install flask-app formazione_sou_k8s/charts/flask-app-chart --namespace formazione-sou
+                '''
+            }
+        }
+    }
+}
