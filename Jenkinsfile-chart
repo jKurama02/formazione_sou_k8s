@@ -8,6 +8,10 @@ pipeline {
                 sh '''
 			helm create namespace formazione-sou
 			helm upgrade --install flask-app /home/jenkins/workspace/helm/charts/flask-app-chart --namespace formazione-sou
+			export NODE_PORT=$(kubectl get --namespace formazione-sou -o jsonpath="{.spec.ports[0].nodePort}" services flask-app)
+  			export NODE_IP=$(kubectl get nodes --namespace formazione-sou -o jsonpath="{.items[0].status.addresses[0].address}")
+  			echo http://$NODE_IP:$NODE_PORT
+			curl http://$NODE_IP:$NODE_PORT
                 '''
             }
         }
