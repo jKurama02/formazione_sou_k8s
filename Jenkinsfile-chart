@@ -16,6 +16,7 @@ pipeline {
 			export NODE_PORT=$(kubectl get --namespace formazione-sou -o jsonpath="{.spec.ports[0].nodePort}" services flask-app)
   			export NODE_IP=$(kubectl get nodes --namespace formazione-sou -o jsonpath="{.items[0].status.addresses[0].address}")
   			echo http://$NODE_IP:$NODE_PORT
+			sleep 10
 			curl http://$NODE_IP:$NODE_PORT
                 '''
             }
