@@ -45,7 +45,7 @@ securityContext: {}
 service:
   type: NodePort
   port: 321  # Porta interna del Service (CLUSTER-IP)
-  targetPort: 30562  # Porta fissa sul nodo (NodePort)
+  nodePort: 30562  # Porta fissa sul nodo (NodePort)
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
