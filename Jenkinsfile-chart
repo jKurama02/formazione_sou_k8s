@@ -3,7 +3,7 @@ pipeline {
         label 'jenkins-agent_1'
     }
     stages {
-        stage('Esegui Helm Install') {
+        stage('Exec Helm Install') {
             steps {
                 sh '''
 			if ! kubectl get namespace formazione-sou >/dev/null 2>&1; then
