@@ -46,6 +46,9 @@ service:
   type: NodePort
   port: 321  # Porta interna del Service (CLUSTER-IP)
   nodePort: 30562  # Porta fissa sul nodo (NodePort)
+  selector:
+    app.kubernetes.io/instance: flask-app
+    app.kubernetes.io/name: flask-app
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
